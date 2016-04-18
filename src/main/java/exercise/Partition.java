@@ -1,4 +1,4 @@
-package exercise;
+package com.thoughtworks.exercise;
 
 public class Partition {
     public Partition(String n) throws PartitionDoesNotExistException {

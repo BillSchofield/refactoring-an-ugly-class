@@ -1,4 +1,4 @@
-package exercise;
+package com.thoughtworks.exercise;
 
 import java.io.File;
 

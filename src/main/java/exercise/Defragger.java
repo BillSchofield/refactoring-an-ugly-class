@@ -1,4 +1,4 @@
-package exercise;
+package com.thoughtworks.exercise;
 
 public class Defragger {
     private String[] p;
@@ -9,7 +9,7 @@ public class Defragger {
 
     public boolean canDefrag(Partition p) {
         for(String n : this.p){
-            if (n.equals(p.toString())){
+            if (n.equals(p)){
                 return true;
             }
         }
