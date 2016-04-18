@@ -3,65 +3,64 @@ package exercise;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
+//      Conditionals
+//[X]   Names are hard to understand
+//      getInput() vs input()
+//[X]   Duplication of DiskUtils
+//      run() is too long
+//      Null checks
+//[X]   No DI (new instances)
+//[X]   No DI (singleton access)
+//[X]   Run is a static method
+//[X]   No constructor
+//      Default field values
+//      GetInput() is public?
 
 public class FileManager {
-    private static Defragger df;
-    private String input = null;
-    private BufferedReader br = null;
+    private Defragger defragger;
+    private final BufferedReader bufferedReader;
+    private final DiskUtils diskUtils;
+    private final FilePrinterFactory filePrinterFactory;
 
-    public static void run() throws PartitionDoesNotExistException {
-        FileManager fm = new FileManager();
-        while(!fm.input("Enter disk command").equals("quit")){
-            String input1 = fm.getInput();
-            if(input1.equals("format")) {
-                DiskUtils.getInstance().format(fm.input("Enter name of drive to format"));
-            }
-            else if(input1.equals("print")) {
-                String fn = fm.input("Enter file name");
-                File file = DiskUtils.getInstance().getFile(fn);
-                FilePrinter fp = new FilePrinter(file);
-                fp.print();
-            }
-            else if (input1.equals("defrag")){
-                    DiskUtils.getInstance().useDefragger(fm, df);
-            }
-        }
+    public FileManager(BufferedReader bufferedReader, DiskUtils diskUtils, Defragger defragger, FilePrinterFactory filePrinterFactory) {
+        this.bufferedReader = bufferedReader;
+        this.diskUtils = diskUtils;
+        this.defragger = defragger;
+        this.filePrinterFactory = filePrinterFactory;
     }
 
-    public String getInput() {
-        if (input == null){
-            input = input();
+    public void run() throws PartitionDoesNotExistException {
+        while (!input("Enter disk command").equals("quit")) {
+            String command = input();
+            if (command.equals("format")) {
+                diskUtils.format(input("Enter name of drive to format"));
+            } else if (command.equals("print")) {
+                String fileName = input("Enter file name");
+                File file = diskUtils.getFile(fileName);
+                filePrinterFactory.create(file).print();
+            } else if (command.equals("defrag")) {
+                diskUtils.useDefragger(this, defragger);
+            }
         }
-        return input;
     }
 
     private String input() {
-        if (br == null){
-            br = new BufferedReader(new InputStreamReader(System.in));
-        }
         try {
-            return br.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return bufferedReader.readLine();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return "";
     }
 
     public String input(String prompt) {
         System.out.println(prompt);
-        if (br == null){
-            br = new BufferedReader(new InputStreamReader(System.in));
-        }
         try {
-            return br.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return bufferedReader.readLine();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return "";
-    }
-
-    public static void init(String[] partitions) {
-        df = new Defragger(partitions);
     }
 }
