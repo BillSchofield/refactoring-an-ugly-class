@@ -8,6 +8,6 @@ public class FilePrinter {
     }
 
     public void print() {
-
+        System.out.println("Printed file");
     }
 }

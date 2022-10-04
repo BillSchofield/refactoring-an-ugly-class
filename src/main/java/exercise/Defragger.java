@@ -7,12 +7,17 @@ public class Defragger {
         this.p = p;
     }
 
-    public boolean canDefrag(Partition p) {
+    public boolean canDefrag(String p) {
         for(String n : this.p){
-            if (n.equals(p.toString())){
+            if (n.equals(p)){
                 return true;
             }
         }
         return false;
+    }
+
+    public void defrag(String pn) {
+        // code that defrags a physical hard drive partition
+        System.out.println("Defragged Partition: " + pn);
     }
 }
